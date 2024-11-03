@@ -114,11 +114,18 @@ void HomeRecommends::onRecommendVideoList(const bilibili::RecommendVideoListResu
     result.requestIndex = originalResult.requestIndex;
     result.item.resize(originalResult.item.size());
     if (ProgramConfig::instance().upFilter.empty()) {
-        std::copy(originalResult.item.begin(), originalResult.item.end(), result.item.begin());
-    } else {
+        // 过滤广告内容
         auto it = std::copy_if(originalResult.item.begin(), originalResult.item.end(), result.item.begin(),
                                [](const bilibili::RecommendVideoResult& r) {
-                                   return !ProgramConfig::instance().upFilter.count(r.owner.mid);
+                                   return !r.business_info.is_ad;  // 过滤掉广告
+                               });
+        result.item.resize(std::distance(result.item.begin(), it));
+    } else {
+        // 同时过滤 UP 主和广告
+        auto it = std::copy_if(originalResult.item.begin(), originalResult.item.end(), result.item.begin(),
+                               [](const bilibili::RecommendVideoResult& r) {
+                                   return !r.business_info.is_ad &&  // 过滤掉广告
+                                          !ProgramConfig::instance().upFilter.count(r.owner.mid);  // 过滤 UP 主
                                });
         result.item.resize(std::distance(result.item.begin(), it));
     }
