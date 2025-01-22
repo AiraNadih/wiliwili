@@ -293,6 +293,7 @@ void MPVCore::init() {
     mpvSetOptionString(mpv, "config", "yes");
     mpvSetOptionString(mpv, "config-dir", ProgramConfig::instance().getConfigDir().c_str());
     mpvSetOptionString(mpv, "ytdl", "no");
+    mpvSetOptionString(mpv, "cache-on-disk", "no");
     mpvSetOptionString(mpv, "audio-channels", "stereo");
     mpvSetOptionString(mpv, "idle", "yes");
     mpvSetOptionString(mpv, "loop-file", "no");
@@ -357,6 +358,7 @@ void MPVCore::init() {
 #elif defined(__PSV__)
     mpvSetOptionString(mpv, "vd-lavc-dr", "no");
     mpvSetOptionString(mpv, "vd-lavc-threads", "4");
+    mpvSetOptionString(mpv, "fbo-format", "rgba8");
 
     // Fix vo_wait_frame() cannot be wakeup
     mpvSetOptionString(mpv, "video-latency-hacks", "yes");
